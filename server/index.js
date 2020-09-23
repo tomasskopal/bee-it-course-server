@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 
 const argv = require('./argv');
 const port = require('./port');
-const { Message } = require('./models/Message');
+const { messagesRouter } = require('./routes/messages');
 
 const setup = require('./middlewares/frontendMiddleware');
 const isDev = process.env.NODE_ENV !== 'production';
@@ -18,7 +18,7 @@ const { resolve } = require('path');
 const app = express();
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
-// app.use('/api', myApi);
+app.use('/api/messages', messagesRouter);
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {
@@ -50,8 +50,6 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', async function() {
   console.log('Connected to DB');
-  const messages = await Message.find({});
-  console.log(messages);
 });
 
 // Start your app.
