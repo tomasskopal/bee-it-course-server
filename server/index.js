@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 
 const argv = require('./argv');
 const port = require('./port');
+const { Message } = require('./models/Message');
+
 const setup = require('./middlewares/frontendMiddleware');
 const isDev = process.env.NODE_ENV !== 'production';
 const ngrok =
@@ -36,13 +38,20 @@ app.get('*.js', (req, res, next) => {
   next();
 });
 
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-});
+mongoose.connect(
+  isDev
+    ? 'mongodb+srv://bee-it-user:bee-it-user@bee-it-messenger.e5nip.mongodb.net/bee-it-messenger?retryWrites=true&w=majority'
+    : process.env.MONGO_URL,
+  {
+    useNewUrlParser: true,
+  },
+);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
+db.once('open', async function() {
   console.log('Connected to DB');
+  const messages = await Message.find({});
+  console.log(messages);
 });
 
 // Start your app.
