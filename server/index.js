@@ -3,6 +3,7 @@
 const express = require('express');
 const logger = require('./logger');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const argv = require('./argv');
 const port = require('./port');
@@ -18,10 +19,8 @@ const { resolve } = require('path');
 const app = express();
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
+app.use(cors());
+app.use(express.json());
 app.use('/api/messages', messagesRouter);
 
 // In production we need to pass these values in instead of relying on webpack
@@ -42,6 +41,7 @@ app.get('*.js', (req, res, next) => {
   next();
 });
 
+// https://cloud.mongodb.com/
 mongoose.connect(
   isDev
     ? 'mongodb+srv://bee-it-user:bee-it-user@bee-it-messenger.e5nip.mongodb.net/bee-it-messenger?retryWrites=true&w=majority'

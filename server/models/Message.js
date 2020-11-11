@@ -1,9 +1,20 @@
 const mongoose = require('mongoose');
 
-const MessageSchema = new mongoose.Schema({
-  message: String,
-  author: String,
-});
+const opts = {
+  timestamps: {
+    currentTime: () => Math.floor(Date.now() / 1000),
+    createdAt: 'timestamp',
+  },
+};
+
+const MessageSchema = new mongoose.Schema(
+  {
+    message: String,
+    username: String,
+    timestamp: Number,
+  },
+  opts,
+);
 
 module.exports.MessageSchema = MessageSchema;
 module.exports.Message = mongoose.model('messages', MessageSchema);

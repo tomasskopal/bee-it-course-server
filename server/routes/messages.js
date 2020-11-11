@@ -1,20 +1,20 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const { Message } = require('../models/Message');
 const messagesRouter = express.Router();
-const jsonParser = bodyParser.json();
 
 messagesRouter.get('/', async (req, res) => {
-  const messages = await Message.find({});
+  const { search } = req.query;
+  const findParams = search ? { message: { $regex: `.*${search}.*` } } : {};
+  const messages = await Message.find(findParams).sort({ timestamp: 'desc' });
   res.status(200).json(messages);
 });
 
-messagesRouter.post('/', jsonParser, (req, res) => {
+messagesRouter.post('/', (req, res) => {
   const message = new Message(req.body);
   message
     .save()
     .then(() => {
-      res.json('Message added successfully');
+      res.status(200).send('Added');
     })
     .catch(() => {
       res.status(400).send('unable to save to database');
