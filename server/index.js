@@ -8,6 +8,7 @@ const cors = require('cors');
 const argv = require('./argv');
 const port = require('./port');
 const { messagesRouter } = require('./routes/messages');
+const { featureFlagsRouter } = require('./routes/featureFlags');
 
 const setup = require('./middlewares/frontendMiddleware');
 const isDev = process.env.NODE_ENV !== 'production';
@@ -22,6 +23,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/messages', messagesRouter);
+app.use('/api/feature-flags', featureFlagsRouter);
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {
