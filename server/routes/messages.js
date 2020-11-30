@@ -21,6 +21,12 @@ messagesRouter.post('/', (req, res) => {
     });
 });
 
+messagesRouter.put('/:id', (req, res) => {
+  Message.findByIdAndUpdate(req.params.id, req.body, {}, () =>
+    res.status(200).send('Updated'),
+  );
+});
+
 messagesRouter.delete('/:id', (req, res) => {
   Message.deleteOne({ _id: req.params.id })
     .then(() => {

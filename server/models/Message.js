@@ -10,6 +10,7 @@ const opts = {
 const MessageSchema = new mongoose.Schema(
   {
     message: String,
+    reactions: Array,
     username: String,
     timestamp: Number,
   },
